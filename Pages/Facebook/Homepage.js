@@ -98,6 +98,33 @@ class Homepage {
     async clickCreateNewAccount() {
         await this.commands.clickWebElement(this.createNewAccountLocator);
     }
+    async getAllLinks() {
+        return await this.commands.findWebElements('a');
+    }
+
+    async getHomePageTitle() {
+        return await this.commands.getWindowTitle();
+    }
+
+    async clickLinkOnFooter(linkName) {
+        await this.commands.scrollAndClickWebElement(`=${linkName}`);
+    }
+
+    async getNumberOfWindows() {
+        return await this.commands.getWindowsCount();
+    }
+
+    async closeWindowExceptHome() {
+        const allHandles = await this.commands.getAllWindowHandles();
+        const homeHandle = await this.commands.getCurrentWindowHandle();
+        for (const handle of allHandles) {
+            await this.commands.switchToWindowHandle(handle);
+            if (handle !== homeHandle) {
+                await this.commands.closeWebWindow();
+            }
+        }
+        await this.commands.switchToWindowHandle(homeHandle);
+    }
 
 
 

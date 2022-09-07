@@ -9,7 +9,7 @@ const loginpage = new Loginpage();
 /**
  * Glue code is a regular expression which helps to map Scenario-steps with functions
  */
-Given(/^I am on (facebook|hotels|darksky) landing page$/, async function(urlName) {
+Given(/^I am on (facebook|hotels|darksky) homepage$/, async function(urlName) {
     switch (urlName.toLowerCase()) {
         case 'facebook':
             await browser.url('/');
@@ -26,17 +26,26 @@ Given(/^I am on (facebook|hotels|darksky) landing page$/, async function(urlName
     }
 });
 
-Then(/^I verify login username field is enabled$/, async function() {
-    expect(await homepage.isLoginEmailFieldEnabled(), 'Login email field is NOT enabled').to.be.true;
+Then(/^I verify login (username|password|button) field is enabled$/, async function(fieldName) {
+    switch (fieldName.toLowerCase()) {
+        case 'username':
+            expect(await homepage.isLoginEmailFieldEnabled(), 'Login email field is NOT enabled').to.be.true;
+            break;
+         case 'password':
+            expect(await homepage.isLoginPwdFieldEnabled(), 'Login password field is NOT enabled').to.be.true;
+            break;
+        case 'button':
+            expect(await homepage.isLoginBtnEnabled(), 'Login button is NOT enabled').to.be.true;
+    } 
 });
 
-Then(/^I verify login password field is enabled$/, async function() {
-    expect(await homepage.isLoginPwdFieldEnabled(), 'Login password field is NOT enabled').to.be.true;
-});
+// Then(/^I verify login password field is enabled$/, async function() {
+//     expect(await homepage.isLoginPwdFieldEnabled(), 'Login password field is NOT enabled').to.be.true;
+// });
 
-Then(/^I verify login button field is enabled$/, async function() {
-    expect(await homepage.isLoginBtnEnabled(), 'Login button is NOT enabled').to.be.true;
-});
+// Then(/^I verify login button field is enabled$/, async function() {
+//     expect(await homepage.isLoginBtnEnabled(), 'Login button is NOT enabled').to.be.true;
+// });
 
 // When(/^I enter "(.+)" as username$/, async function(username) {
 //     await homepage.enterLoginEmail(username);
@@ -64,4 +73,9 @@ When(/^I click login button$/, async function() {
 
 Then(/^I verify error is displayed$/, async function() {
     expect(await loginpage.isLoginErrDisplayed(), 'Login error is NOT displayed').to.be.true;
+});
+
+Then(/^I verify (.+) links on the homepage$/, async function(count) {
+    const links = await homepage.getAllLinks();
+    expect(links.length, 'Links of Homepage is not as expected').to.equal(Number(count));
 });
