@@ -1,3 +1,4 @@
+const MyMomentFunctions = require("../../Utils/MyMomentFunctions");
 const Commands = require("../Commands");
 
 class Homepage {
@@ -52,6 +53,18 @@ class Homepage {
         const monthHeadingLocator = this.monthHeadingLocatorStarts + monthName + ' ' + year;
         const monthDatesLocator = this.monthDatesLocatorStarts + monthName + ' ' + year + this.monthDatesLocatorEnds
         await this.commands.selectDateFromCalendar(monthHeadingLocator, this.nextButtonOnCalendarLocator, monthDatesLocator, checkOutDate)
+    }
+    async getDisableDatesForCurrentMonth() {
+        const currentMonthHeading = MyMomentFunctions.getCurrentMomentInFormat('MMMM YYYY');
+        const monthName = currentMonthHeading.split(' ')[0];
+        const year = currentMonthHeading.split(' ')[1];
+        const monthHeadingLocator = this.monthHeadingLocatorStarts + monthName + ' ' + year;
+        const isCurrentMonthSeen = await this.commands.isWebElementDisplayed(monthHeadingLocator);
+        if (!isCurrentMonthSeen) {
+            await this.commands.clickWebElement(this.previousButtonOnCalendarLocator);
+        }
+        const disabledDatesLocator = this.monthDatesLocatorStarts + monthName + ' ' + year + this.monthDatesLocatorEnds_DisableDated;
+        return await this.commands.findWebElements(disabledDatesLocator);
     }
 
 

@@ -100,6 +100,34 @@ class Commands {
             }
         }
     }
+    async getAllWindowHandles() {
+        await browser.waitUntil(async () => {
+            const allHandles = await browser.getWindowHandles();
+            return allHandles.length > 1;
+        });
+        return await browser.getWindowHandles();
+    }
+
+    async getCurrentWindowHandle() {
+        return await browser.getWindowHandle();
+    }
+
+    async switchToWindowHandle(handle) {
+        await browser.switchToWindow(handle);
+    }
+
+    async closeWebWindow() {
+        await browser.closeWindow();
+    }
+ 
+    async getWindowsCount() {
+        const allHandles = await this.getAllWindowHandles();
+        return allHandles.length;
+    }
+
+    async getWindowTitle() {
+        return await browser.getTitle();
+    }
 
 
 }
