@@ -3,9 +3,6 @@ exports.config = {
     // ====================
     // Runner Configuration
     // ====================
-    //
-    user:natabuzivska_3Ex14S,
-    key: EM5wQCoHyzR18AYBMYFj,
     // ==================
     // Specify Test Files
     // ==================

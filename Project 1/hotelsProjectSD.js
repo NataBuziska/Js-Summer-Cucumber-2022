@@ -9,7 +9,7 @@ const firstName = "(!@)";
 const lastName = "(%^&)";
 const signUpPsw = "1234654"
 const pageComments = "any text"
-const homepageProject = new homepageProject();
+const homepageProject = new HomepageProject();
 
 Given(/^I am on hotels landing page$/, async function () {
     await browser.url('https://www.hotels.com/');
@@ -76,11 +76,6 @@ Then (/^I Verify “Continue” button is enabled$/, async function() {
 
 
 
-
-And (/^And I click on Submit button$/, async function () {
-    await homepageProject.clickSubmitButton();
-});
-
 Then (/^I Verify error message is displayed (Please fill in the required information highlighted below.)$/, async function() {
     expect(await homepageProject.isErrorMsgDisplayed(), 'The Erorr message is NOT displaed').to.be.true;
 });
@@ -110,6 +105,33 @@ Then (/^I Verify total number of guests in sum of adults and children as same as
 });
 
 
-And (/^AI enter .+ comments$/, async function() {
+And (/^I select any star-rating$/, async function(){
+    await homepageProject.isStarRatingEnabled();
+    await homepageProject.click5StarButton();
+});
+
+And (/^I enter .+ comments$/, async function() {
     await homepageProject.typeInPageComments(pageComments);
 });
+
+And (/^I select any option for How likely are you to return to Hotels.com?$/, async function (){
+    await homepageProject.selectHowLikelyFromDpn();
+});
+
+And (/^I select any answer for Prior to this visit, have you ever booked on Hotels.com?$/, async function(){
+    await homepageProject.isPriorToThisVisitEnabled();
+    await homepageProject.clickPriorToVisitButton();
+});
+
+And (/^I select any answer for Did you accomplish what you wanted to do on this page?$/, async function(){
+    await homepageProject.isDidYouAccomplishEnabled();
+    await homepageProject.clickDidYouAccomplishButton();
+});
+
+And (/^And I click on Submit button$/, async function () {
+    await homepageProject.clickSubmitButton();
+});
+
+Then(/^I Verify THANK YOU FOR YOUR FEEDBACK. is displayed$/, async function (){
+    expect(await homepageProject.isFeedbackMsgDisplayed(), 'THANK YOU FOR YOUR FEEDBACK message is NOT displayed').to.be.true;
+});   
