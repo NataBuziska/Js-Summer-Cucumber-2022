@@ -21,12 +21,12 @@ const Commands = require("../Commands");
  singUpPswLct = '#signupFormPasswordInput';
  keepMeSignedLct = '#signUpFormRememberMeCheck';
  continueBtn = '#signupFormSubmitButton';
- feedbackLink = '//a[text() = "Feedback")]';
+ feedbackLink = '//a[text() = "Feedback"]';
  submitButton = '#submit-button';
  errorMsg = '//p[contains(text(), "the required information")]';
  pageRatingButtons = '//div[@class = "radio-button"]';
  pageCommentsLct = '#verbatim';
- howLikelyLct = '#will-you-return';
+ howLikelyLct = '//option[contains(text(), "Highly likely"]';
  travelesLct = '//button//span[text() = "Travelers:"]';
  adultsPlusBtn = '//svg[contains(@aria-label, "number of adults in ro")]';
  childrenPlusBtn = '//svg[contains(@aria-label, "number of children in roo")]';
@@ -35,7 +35,16 @@ const Commands = require("../Commands");
  ageChd3Lct = '#age-traveler_selector_children_age_selector-0-2//option[text() = "7"]';
  doneButton = '#traveler_selector_done_button';
  allTravelersLct = '//button//span[contains(text(), "9 travelers")]';
-
+ oneStarBtn = '//label[@for = "page-rating-1"]';
+ twoStarBtn = '//label[@for = "page-rating-2"]';
+ threeStarBtn = '//label[@for = "page-rating-3"]';
+ fourStarBtn =  '//label[@for = "page-rating-4"]';
+ fiveStarBtn = '//label[@for = "page-rating-5"]';
+ haveYouBookedLct1 = '//span[@data-localization = "booked-before-yes"]';
+ haveYouBookedLct2 = '//span[@data-localization = "booked-before-no"]';
+ didYouAccomplishLct1 = '//span[@data-localization = "were-you-successful-yes"]';
+ didYouAccomplishLct2 = '//span[@data-localization = "were-you-successful-no"]';
+ feedbackMsg = '//h5[contains(text(), "UR FEEDBA")]';
 
  async clickLinkSignIn() {
     await this.commands.clickWebElement(this.linkSignIn);
@@ -112,6 +121,36 @@ async isEnabledSignInBtn2() {
  async switchToWindowFeedback() {
    await this.commands.switchToWindowHandle(handle[1]);
  };
+ 
+ async isStarRatingEnabled() {
+  let isEnabled = false;
+  switch (starRating){
+      case '1*':
+          isEnabled = await this.commands.isWebElementEnabled(this.oneStarBtn);
+          break;
+      case '2*':
+          isEnabled = await this.commands.isWebElementEnabled(this.twoStarBtn);
+          break;
+      case '3*':
+          isEnabled = await this.commands.isWebElementEnabled(this.threeStarBtn);
+          break;   
+      case '4*':
+          isEnabled = await this.commands.isWebElementEnabled(this.fourStarBtn);
+          break;    
+      case '5*':
+            isEnabled = await this.commands.isWebElementEnabled(this.fiveStarBtn);
+            break;     
+      default:
+          break;
+  }
+  return isEnabled;
+ };
+ 
+ async click5StarButton() {
+   await this.commands.clickWebElement(this.fiveStarBtn);
+ };
+
+
  async clickSubmitButton() {
     await this.commands.clickWebElement(this.submitButton);
  };
@@ -119,7 +158,57 @@ async isEnabledSignInBtn2() {
    return await this.commands.isWebElementDisplayed(this.errorMsg);
  };
  
- async clickTravelersBtn() {
+ async typeInPageComments(pageComments) {
+  await this.commands.typeInWebElement(this.pageCommentsLct, pageComments);
+ };
+
+ async selectHowLikelyFromDpn(selectThis) { 
+  await this.commands.selectFromDropdown(this.howLikelyLct, selectThis);
+ };
+
+ async isPriorToThisVisitEnabled() {
+  let isEnabled = false;
+  switch (answer){
+      case 'Yes':
+          isEnabled = await this.commands.isWebElementEnabled(this.haveYouBookedLct1);
+          break;
+      case 'No':
+          isEnabled = await this.commands.isWebElementEnabled(this.haveYouBookedLct2);
+          break;
+      default:
+           break;
+    }
+    return isEnabled;
+   };
+
+   async clickPriorToVisitButton() {
+    await this.commands.clickWebElement(this.haveYouBookedLct1);
+ };
+ 
+ async isDidYouAccomplishEnabled() {
+  let isEnabled = false;
+  switch (answer){
+      case 'Yes':
+          isEnabled = await this.commands.isWebElementEnabled(this.didYouAccomplishLct1);
+          break;
+      case 'No':
+          isEnabled = await this.commands.isWebElementEnabled(this.didYouAccomplishLct2);
+          break;
+      default:
+            break;
+    }
+    return isEnabled;
+   };
+
+   async clickDidYouAccomplishButton() {
+    await this.commands.clickWebElement(this.didYouAccomplishLct1);
+   };
+   async isFeedbackMsgDisplayed() {
+    await this.commands.isWebElementDisplayed(this.feedbackMsg);
+   };
+
+
+   async clickTravelersBtn() {
    await this.commands.clickWebElement(this.travelesLct);
    await this.commands.waitForDisplayed();
  };
@@ -159,13 +248,6 @@ async isEnabledSignInBtn2() {
 
 
 
-
- async typeInPageComments(pageComments) {
-   await this.commands.typeInWebElement(this.pageCommentsLct, pageComments);
- };
  
- async selectHowLikelyFromDpn(selectThis) { 
-   await this.commands.selectFromDropdown(this.howLikelyLct, selectThis);
- };
 }
 module.exports = HomepageProject;
